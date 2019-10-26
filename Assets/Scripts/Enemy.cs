@@ -26,6 +26,7 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         agent.destination = target.transform.position;
+        animator.SetFloat("Speed", agent.velocity.sqrMagnitude);
 
         if (life < 0)
         {

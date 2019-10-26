@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
 
     public float moveSpeed = 5f;
     public float rotationSpeed = 360f;
-    public GameObject bulletPrefab;
+    // public GameObject bulletPrefab;
     public float speed = 1.0f;
 
     CharacterController characterController;
@@ -39,7 +39,7 @@ public class Player : MonoBehaviour
         animator.SetFloat("Speed", characterController.velocity.magnitude);
 
         // shoot
-        if (Input.GetKeyDown(KeyCode.Space)) Shoot();
+        // if (Input.GetKeyDown(KeyCode.Space)) Shoot();
 
         if (GameObject.FindGameObjectsWithTag("Dot").Length == 0)
         {
@@ -59,11 +59,11 @@ public class Player : MonoBehaviour
         }
     }
 
-    void Shoot()
-    {
-        GameObject bullet = Instantiate(bulletPrefab) as GameObject;
-        Vector3 force = this.transform.forward * speed;
-        bullet.GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
-        bullet.transform.position = this.transform.position + new Vector3(0.0f, 0.5f, 0.0f);
-    }
+    // void Shoot()
+    // {
+    //     GameObject bullet = Instantiate(bulletPrefab) as GameObject;
+    //     Vector3 force = this.transform.forward * speed;
+    //     bullet.GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
+    //     bullet.transform.position = this.transform.position + new Vector3(0.0f, 0.5f, 0.0f);
+    // }
 }
