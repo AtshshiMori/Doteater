@@ -39,6 +39,7 @@ sysinfo.txt
 Assembly-CSharp-Editor.csproj
 Assembly-CSharp.csproj
 app/
+Assets/Packages/
 
 # setting files
 .vscode/
