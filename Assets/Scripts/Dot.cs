@@ -6,6 +6,8 @@ public class Dot : MonoBehaviour
 {
     private const string key_isGot = "IsGot";
 
+
+    [SerializeField] private GameObject getParticle;
     private Animator animator;
 
     // Use this for initialization
@@ -26,6 +28,8 @@ public class Dot : MonoBehaviour
     public void getDot()
     {
         animator.SetBool(key_isGot, true);
+        GameObject.Instantiate(getParticle, this.transform.position, getParticle.transform.rotation);
+        // Destroy(this.gameObject);
     }
 
 }
