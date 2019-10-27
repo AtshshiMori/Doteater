@@ -51,7 +51,8 @@ public class Player : MonoBehaviour
     {
         if (other.tag == "Dot")
         {
-            Destroy(other.gameObject);
+            Dot dot = other.GetComponent<Dot>();
+            dot.getDot();
         }
         else if (other.tag == "Enemy")
         {
