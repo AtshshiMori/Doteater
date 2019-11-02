@@ -5,6 +5,12 @@
 [Bb]uilds/
 Assets/AssetStoreTools*
 
+# custom
+Assembly-CSharp-Editor.csproj
+Assembly-CSharp.csproj
+app/
+Assets/Packages/
+
 # Visual Studio cache directory
 .vs/
 
@@ -34,12 +40,6 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
-
-# others
-Assembly-CSharp-Editor.csproj
-Assembly-CSharp.csproj
-app/
-Assets/Packages/
 
 # setting files
 .vscode/

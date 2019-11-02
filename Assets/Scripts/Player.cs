@@ -6,11 +6,11 @@ using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour
 {
 
+    [SerializeField] private GameObject cam;
     public float moveSpeed = 5f;
     public float rotationSpeed = 360f;
     // public GameObject bulletPrefab;
-    public float speed = 1.0f;
-
+    // public float speed = 1.0f;
     CharacterController characterController;
     Animator animator;
 
@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
     {
         // movement
         Vector3 direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        direction = Quaternion.Euler(0, cam.transform.rotation.eulerAngles.y, 0) * direction;
         if (direction.sqrMagnitude > 0.01f)
         {
             Vector3 forward = Vector3.Slerp(
@@ -41,10 +42,10 @@ public class Player : MonoBehaviour
         // shoot
         // if (Input.GetKeyDown(KeyCode.Space)) Shoot();
 
-        if (GameObject.FindGameObjectsWithTag("Dot").Length == 0)
-        {
-            SceneManager.LoadScene("Win");
-        }
+        // if (GameObject.FindGameObjectsWithTag("Dot").Length == 0)
+        // {
+        //     SceneManager.LoadScene("Win");
+        // }
     }
 
     void OnTriggerEnter(Collider other)

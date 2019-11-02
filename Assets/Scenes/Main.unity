@@ -777,8 +777,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   rotationSpeed: 360
-  bulletPrefab: {fileID: 1369213727221638, guid: 3f432147883884173b12514515618d7e,
-    type: 2}
   speed: 10
 --- !u!143 &1023770520
 CharacterController:

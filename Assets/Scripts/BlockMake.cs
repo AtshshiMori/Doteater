@@ -13,13 +13,12 @@ public class BlockMake : MonoBehaviour
     // Use this for initialization
     private List<List<int>> blockArray = new List<List<int>>{
         new List<int>{1,1,1,1,1,1,1,1,1,1,1,1,1},
-        new List<int>{1,0,0,0,0,0,2,0,0,0,0,0,1},
-        new List<int>{1,0,1,1,1,1,1,1,1,1,1,0,1},
-        new List<int>{1,0,0,0,0,0,1,0,0,0,1,0,1},
-        new List<int>{1,0,1,0,1,0,0,2,1,0,1,2,1},
-        new List<int>{1,0,1,0,2,0,1,0,0,0,1,0,1},
-        new List<int>{1,2,1,0,1,1,1,1,1,0,1,0,1},
-        new List<int>{1,0,0,0,0,0,0,2,0,0,0,0,1},
+        new List<int>{1,0,0,0,0,0,0,0,0,0,0,0,1},
+        new List<int>{1,0,0,0,0,0,0,0,0,0,0,0,1},
+        new List<int>{1,0,0,0,0,0,0,0,0,0,0,0,1},
+        new List<int>{1,0,0,0,0,0,0,0,0,0,0,0,1},
+        new List<int>{1,0,0,0,0,0,0,0,0,0,0,0,1},
+        new List<int>{1,0,0,0,0,0,0,0,0,0,0,0,1},
         new List<int>{1,1,1,1,1,1,1,1,1,1,1,1,1}
     };
     void Start()
