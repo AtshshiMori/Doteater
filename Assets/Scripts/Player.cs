@@ -8,6 +8,8 @@ using UnityEngine.UI;
 public class Atoms
 {
     List<Atom> atoms;
+    public bool haveH2 { get; private set; }
+    public bool haveH2O { get; private set; }
 
     // 静的メンバ
     // 原子の種類
@@ -45,6 +47,7 @@ public class Atoms
     public Atoms()
     {
         atoms = new List<Atom>();
+        haveH2O = false;
     }
 
     // メソッド
@@ -64,6 +67,8 @@ public class Atoms
 
     public void Add(Atom atom)
     {
+        if (atom == Atom.H2) this.haveH2 = true;
+        if (atom == Atom.H2O) this.haveH2O = true;
         atoms.Add(atom);
         UpdateAtoms();
     }
@@ -105,12 +110,11 @@ public class Atoms
 public class Player : MonoBehaviour
 {
 
-    [SerializeField] private GameObject cam = null;
-    public float moveSpeed = 5f;
-    public float rotationSpeed = 360f;
-
+    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float rotationSpeed = 360f;
     [SerializeField] private float hp = 1.0f;
     [SerializeField] private Text text = null;
+    [SerializeField] private GameObject cam = null;
 
     Atoms atoms;
 
@@ -170,8 +174,17 @@ public class Player : MonoBehaviour
             // Attack
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                handCollider.enabled = true;
-                animator.SetTrigger("Jab");
+                // H2Oを持っていれば水で攻撃
+                if (atoms.haveH2O)
+                {
+
+                }
+                // それ以外はジャブで攻撃
+                else
+                {
+                    handCollider.enabled = true;
+                    animator.SetTrigger("Jab");
+                }
             }
             else if (Input.GetKeyDown(KeyCode.T))
             {
