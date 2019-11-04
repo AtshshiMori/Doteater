@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HitObjects : MonoBehaviour
+public class CollisionDetectionPlayer : MonoBehaviour
 {
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy"))
         {
             Enemy enemy = other.GetComponent<Enemy>();
-            enemy.Damaged();
+            enemy.Damaged(10);
         }
     }
 }

@@ -9,6 +9,8 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject cam;
     public float moveSpeed = 5f;
     public float rotationSpeed = 360f;
+
+    [SerializeField] private float hp = 1.0f;
     // public GameObject bulletPrefab;
     // public float speed = 1.0f;
     private CharacterController characterController;
@@ -38,13 +40,9 @@ public class Player : MonoBehaviour
             return;
         }
 
-
-
         // Ratate
         Vector3 direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         direction = Quaternion.Euler(0, cam.transform.rotation.eulerAngles.y, 0) * direction;
-
-
         if (direction.sqrMagnitude > 0.01f)
         {
 
@@ -56,16 +54,21 @@ public class Player : MonoBehaviour
             transform.LookAt(transform.position + forward);
         }
 
+
         if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Jab"))
         {
             // Move
             characterController.Move(direction * moveSpeed * Time.deltaTime);
 
             // Attack
-            if (Input.GetKey(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
                 handCollider.enabled = true;
                 animator.SetTrigger("Jab");
+            }
+            else if (Input.GetKeyDown(KeyCode.T))
+            {
+                animator.SetTrigger("DamagedWeak");
             }
         }
         animator.SetFloat("Speed", characterController.velocity.magnitude);
@@ -88,6 +91,22 @@ public class Player : MonoBehaviour
         // }
     }
 
+    public void Damaged(int attackPoint)
+    {
+        if (animator.GetBool("DamagedWeak") || animator.GetBool("Death")) return;
+
+        hp -= attackPoint;
+
+        if (hp <= 0)
+        {
+            animator.SetBool("Death", true);
+        }
+        else
+        {
+            animator.SetBool("DamagedWeak", true);
+        }
+    }
+
     void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Dot")
@@ -100,6 +119,8 @@ public class Player : MonoBehaviour
             //SceneManager.LoadScene("Lose");
         }
     }
+
+
 
     // void Shoot()
     // {
