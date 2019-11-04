@@ -2,15 +2,118 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
+
+public class Atoms
+{
+    List<Atom> atoms;
+
+    // 静的メンバ
+    // 原子の種類
+    public enum Atom
+    {
+        H,
+        H2,
+        O,
+        H2O
+    }
+
+    // 組み合わせ式 [atom1 + atom2 = output]
+    public struct Conbination
+    {
+        public Atom atom1;
+        public Atom atom2;
+        public Atom output;
+
+        public Conbination(Atom atom1, Atom atom2, Atom output)
+        {
+            this.atom1 = atom1;
+            this.atom2 = atom2;
+            this.output = output;
+        }
+    }
+
+    // 組み合わせ式のリスト
+    private static readonly List<Conbination> ConbinationList = new List<Conbination>()
+    {
+        new Conbination(Atom.H, Atom.H, Atom.H2),
+        new Conbination(Atom.H2, Atom.O, Atom.H2O)
+    };
+
+    // コンストラクタ
+    public Atoms()
+    {
+        atoms = new List<Atom>();
+    }
+
+    // メソッド
+
+    public string ShowAll()
+    {
+        string s = "";
+        for (int i = 0; i < atoms.Count; i++)
+        {
+            s += atoms[i].ToString();
+
+            if (i != atoms.Count - 1)
+                s += ",";
+        }
+        return s;
+    }
+
+    public void Add(Atom atom)
+    {
+        atoms.Add(atom);
+        UpdateAtoms();
+    }
+
+    private void RemoveAt(int i)
+    {
+        atoms.RemoveAt(i);
+    }
+
+    private void RemoveLast()
+    {
+        atoms.RemoveAt(atoms.Count - 1);
+    }
+
+    private void UpdateAtoms()
+    {
+        if (atoms.Count < 2) return;
+
+        int cnt = atoms.Count;
+        Atom first = atoms[cnt - 1];
+
+        for (int i = cnt - 2; i >= 0; i--)
+        {
+            foreach (Conbination conb in ConbinationList)
+            {
+                // 組み合わせリストにあれば、変換
+                if (first == conb.atom1 && atoms[i] == conb.atom2 ||
+                    atoms[i] == conb.atom1 && first == conb.atom2)
+                {
+                    this.RemoveLast();
+                    this.RemoveAt(i);
+                    this.Add(conb.output);
+                }
+            }
+        }
+    }
+}
 
 public class Player : MonoBehaviour
 {
 
-    [SerializeField] private GameObject cam;
+    [SerializeField] private GameObject cam = null;
     public float moveSpeed = 5f;
     public float rotationSpeed = 360f;
 
     [SerializeField] private float hp = 1.0f;
+    [SerializeField] private Text text = null;
+
+    Atoms atoms;
+
     // public GameObject bulletPrefab;
     // public float speed = 1.0f;
     private CharacterController characterController;
@@ -25,12 +128,16 @@ public class Player : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         animator = GetComponentInChildren<Animator>();
         child = transform.Find("unitychan").gameObject;
+        atoms = new Atoms();
 
         handCollider = GameObject.Find("Character1_LeftHand").GetComponent<SphereCollider>();
     }
 
     void Update()
     {
+        // UIテキストの原子リストを更新
+        text.text = atoms.ShowAll();
+
         if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Jab"))
         {
             handCollider.enabled = false;
@@ -113,6 +220,7 @@ public class Player : MonoBehaviour
         {
             Dot dot = other.GetComponent<Dot>();
             dot.getDot();
+            atoms.Add(dot.type);
         }
         else if (other.tag == "Enemy")
         {

@@ -6,19 +6,20 @@ public class Dot : MonoBehaviour
 {
     private const string key_isGot = "IsGot";
 
+    [SerializeField] private float rotateSpeed = 10.0f;
+    [SerializeField] private GameObject getParticle = null;
 
-    [SerializeField] private GameObject getParticle;
-    private Animator animator;
+    public Atoms.Atom type = Atoms.Atom.H;
+    Animator animator;
 
-    // Use this for initialization
     void Start()
     {
         animator = this.GetComponent<Animator>();
     }
 
-    // Update is called once per frame
     void Update()
     {
+        transform.Rotate(new Vector3(0, rotateSpeed, 0));
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Deth"))
         {
             Destroy(this.gameObject);

@@ -10,14 +10,14 @@ public class TPSCamera : MonoBehaviour
     float angleDown = -60f;
 
     //ユニティちゃんをInspectorで入れる
-    [SerializeField] GameObject player;
+    [SerializeField] GameObject player = null;
     //Main CameraをInspectorで入れる
-    [SerializeField] Camera cam;
+    [SerializeField] Camera cam = null;
 
     //Cameraが回転するスピード
     [SerializeField] float rotate_speed = 3;
     //Axisの位置を指定する変数
-    [SerializeField] Vector3 axisPos;
+    [SerializeField] Vector3 axisPos = Vector3.zero;
 
     //マウススクロールの値を入れる
     [SerializeField] float scroll;

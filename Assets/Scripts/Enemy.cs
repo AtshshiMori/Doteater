@@ -7,7 +7,7 @@ public class Enemy : MonoBehaviour
 {
 
 
-    [SerializeField] private GameObject target;
+    [SerializeField] private GameObject target = null;
 
     [SerializeField] private float hp = 1.0f;
     [SerializeField] private float attackDistance = 2.0f;
@@ -26,7 +26,6 @@ public class Enemy : MonoBehaviour
         handCollider.enabled = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
         agent.destination = target.transform.position;
