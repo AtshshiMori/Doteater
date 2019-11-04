@@ -11,24 +11,43 @@ public class Player : MonoBehaviour
     public float rotationSpeed = 360f;
     // public GameObject bulletPrefab;
     // public float speed = 1.0f;
-    CharacterController characterController;
-    Animator animator;
+    private CharacterController characterController;
+    private Animator animator;
+    private GameObject child;
 
-    // Use this for initialization
+    // コライダー
+    private Collider handCollider;
+
     void Start()
     {
         characterController = GetComponent<CharacterController>();
         animator = GetComponentInChildren<Animator>();
+        child = transform.Find("unitychan").gameObject;
+
+        handCollider = GameObject.Find("Character1_LeftHand").GetComponent<SphereCollider>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        // movement
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Jab"))
+        {
+            handCollider.enabled = false;
+        }
+        else
+        {
+            return;
+        }
+
+
+
+        // Ratate
         Vector3 direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         direction = Quaternion.Euler(0, cam.transform.rotation.eulerAngles.y, 0) * direction;
+
+
         if (direction.sqrMagnitude > 0.01f)
         {
+
             Vector3 forward = Vector3.Slerp(
                                   transform.forward,
                                   direction,
@@ -36,8 +55,29 @@ public class Player : MonoBehaviour
                               );
             transform.LookAt(transform.position + forward);
         }
-        characterController.Move(direction * moveSpeed * Time.deltaTime);
+
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Jab"))
+        {
+            // Move
+            characterController.Move(direction * moveSpeed * Time.deltaTime);
+
+            // Attack
+            if (Input.GetKey(KeyCode.Space))
+            {
+                handCollider.enabled = true;
+                animator.SetTrigger("Jab");
+            }
+        }
         animator.SetFloat("Speed", characterController.velocity.magnitude);
+        characterController.Move(new Vector3(0, Physics.gravity.y * Time.deltaTime * Time.deltaTime, 0)); // 重力を与える
+
+
+
+        // アニメーションでこ要素の位置がズレるのを修正
+        child.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
+        child.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+
+
 
         // shoot
         // if (Input.GetKeyDown(KeyCode.Space)) Shoot();
@@ -57,7 +97,7 @@ public class Player : MonoBehaviour
         }
         else if (other.tag == "Enemy")
         {
-            SceneManager.LoadScene("Lose");
+            //SceneManager.LoadScene("Lose");
         }
     }
 

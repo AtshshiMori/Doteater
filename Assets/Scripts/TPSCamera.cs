@@ -35,7 +35,6 @@ public class TPSCamera : MonoBehaviour
     void Update()
     {
         transform.position = player.transform.position + axisPos;
-
         // ドラッグで視点を変更
         if (Input.GetMouseButton(0))
         {

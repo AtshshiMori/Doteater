@@ -9,7 +9,10 @@ Assets/AssetStoreTools*
 Assembly-CSharp-Editor.csproj
 Assembly-CSharp.csproj
 app/
+BlogItems/
 Assets/Packages/
+Packages/
+Logs/
 
 # Visual Studio cache directory
 .vs/
