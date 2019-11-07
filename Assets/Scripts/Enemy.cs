@@ -46,7 +46,7 @@ public class Enemy : MonoBehaviour
         //     animator.SetTrigger("Damage");
         // }
     }
-    public void Damaged(int attackPoint)
+    public void Damaged(float attackPoint)
     {
         if (animator.GetBool("Damaged") || animator.GetBool("Death")) return;
 

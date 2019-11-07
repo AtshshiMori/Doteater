@@ -124,32 +124,18 @@ public class Player : MonoBehaviour
     private Animator animator;
     private GameObject child;
 
-    // コライダー
-    private Collider handCollider;
-
     void Start()
     {
         characterController = GetComponent<CharacterController>();
         animator = GetComponentInChildren<Animator>();
         child = transform.Find("unitychan").gameObject;
         atoms = new Atoms();
-
-        handCollider = GameObject.Find("Character1_LeftHand").GetComponent<SphereCollider>();
     }
 
     void Update()
     {
         // UIテキストの原子リストを更新
         text.text = atoms.ShowAll();
-
-        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Jab"))
-        {
-            handCollider.enabled = false;
-        }
-        else
-        {
-            return;
-        }
 
         // Ratate
         Vector3 direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
@@ -165,8 +151,9 @@ public class Player : MonoBehaviour
             transform.LookAt(transform.position + forward);
         }
 
-
-        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Jab"))
+        // 入力は攻撃中は受け付けない。
+        if (animator.GetBool("Jab") == false &&
+            animator.GetBool("WaterAttack") == false)
         {
             // Move
             characterController.Move(direction * moveSpeed * Time.deltaTime);
@@ -174,16 +161,16 @@ public class Player : MonoBehaviour
             // Attack
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                Debug.Log("Attack");
                 // H2Oを持っていれば水で攻撃
                 if (atoms.haveH2O)
                 {
-
+                    animator.SetBool("WaterAttack", true);
                 }
                 // それ以外はジャブで攻撃
                 else
                 {
-                    handCollider.enabled = true;
-                    animator.SetTrigger("Jab");
+                    animator.SetBool("Jab", true);
                 }
             }
             else if (Input.GetKeyDown(KeyCode.T))
@@ -191,16 +178,14 @@ public class Player : MonoBehaviour
                 animator.SetTrigger("DamagedWeak");
             }
         }
+
         animator.SetFloat("Speed", characterController.velocity.magnitude);
         characterController.Move(new Vector3(0, Physics.gravity.y * Time.deltaTime * Time.deltaTime, 0)); // 重力を与える
-
 
 
         // アニメーションでこ要素の位置がズレるのを修正
         child.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
         child.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
-
-
 
         // shoot
         // if (Input.GetKeyDown(KeyCode.Space)) Shoot();
@@ -211,7 +196,7 @@ public class Player : MonoBehaviour
         // }
     }
 
-    public void Damaged(int attackPoint)
+    public void Damaged(float attackPoint)
     {
         if (animator.GetBool("DamagedWeak") || animator.GetBool("Death")) return;
 
@@ -240,8 +225,6 @@ public class Player : MonoBehaviour
             //SceneManager.LoadScene("Lose");
         }
     }
-
-
 
     // void Shoot()
     // {
