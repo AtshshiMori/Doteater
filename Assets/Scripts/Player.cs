@@ -161,7 +161,6 @@ public class Player : MonoBehaviour
             // Attack
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                Debug.Log("Attack");
                 // H2Oを持っていれば水で攻撃
                 if (atoms.haveH2O)
                 {
