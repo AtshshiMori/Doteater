@@ -159,7 +159,7 @@ public class Player : MonoBehaviour
             characterController.Move(direction * moveSpeed * Time.deltaTime);
 
             // Attack
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetMouseButtonDown(0))
             {
                 // H2Oを持っていれば水で攻撃
                 if (atoms.haveH2O)
