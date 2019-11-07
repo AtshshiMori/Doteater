@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-
+#region AtomClass
 public class Atoms
 {
     List<Atom> atoms;
@@ -106,23 +106,27 @@ public class Atoms
         }
     }
 }
+# endregion
 
 public class Player : MonoBehaviour
 {
-
+    #region propaty
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float rotationSpeed = 360f;
     [SerializeField] private float hp = 1.0f;
     [SerializeField] private Text text = null;
     [SerializeField] private GameObject cam = null;
+    [SerializeField] private GameObject waterAttackParticle = null;
 
     Atoms atoms;
 
     // public GameObject bulletPrefab;
     // public float speed = 1.0f;
-    private CharacterController characterController;
-    private Animator animator;
-    private GameObject child;
+    CharacterController characterController;
+    Animator animator;
+    GameObject child;
+    Collider handCollider;
+    #endregion
 
     void Start()
     {
@@ -130,10 +134,14 @@ public class Player : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         child = transform.Find("unitychan").gameObject;
         atoms = new Atoms();
+        handCollider = GameObject.Find("Character1_LeftHand").GetComponent<SphereCollider>();
     }
 
     void Update()
     {
+        //Debug.LogFormat("Frame:{0} , stateIdle: {1}, stateDamaged: {2}, isintransition: {3}", ++frame, animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"), animator.GetCurrentAnimatorStateInfo(0).IsName("DamagedWeak"), animator.IsInTransition(0));
+        // Jabのコライダーを更新
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Jab")) handCollider.enabled = false;
         // UIテキストの原子リストを更新
         text.text = atoms.ShowAll();
 
@@ -151,9 +159,9 @@ public class Player : MonoBehaviour
             transform.LookAt(transform.position + forward);
         }
 
-        // 入力は攻撃中は受け付けない。
-        if (animator.GetBool("Jab") == false &&
-            animator.GetBool("WaterAttack") == false)
+        // 入力はIdle,Runの時のみ受け付ける
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle")
+            || animator.GetCurrentAnimatorStateInfo(0).IsName("Run"))
         {
             // Move
             characterController.Move(direction * moveSpeed * Time.deltaTime);
@@ -164,12 +172,12 @@ public class Player : MonoBehaviour
                 // H2Oを持っていれば水で攻撃
                 if (atoms.haveH2O)
                 {
-                    animator.SetBool("WaterAttack", true);
+                    WaterAttack();
                 }
                 // それ以外はジャブで攻撃
                 else
                 {
-                    animator.SetBool("Jab", true);
+                    Jab();
                 }
             }
             else if (Input.GetKeyDown(KeyCode.T))
@@ -197,7 +205,8 @@ public class Player : MonoBehaviour
 
     public void Damaged(float attackPoint)
     {
-        if (animator.GetBool("DamagedWeak") || animator.GetBool("Death")) return;
+        if (animator.IsInTransition(0) ||
+            animator.GetCurrentAnimatorStateInfo(0).IsName("DamagedWeak")) return;
 
         hp -= attackPoint;
 
@@ -207,8 +216,25 @@ public class Player : MonoBehaviour
         }
         else
         {
-            animator.SetBool("DamagedWeak", true);
+            animator.SetTrigger("DamagedWeak");
         }
+    }
+
+    void Jab()
+    {
+        handCollider.enabled = true;
+        animator.SetTrigger("Jab");
+    }
+
+    void WaterAttack()
+    {
+        animator.SetTrigger("WaterAttack");
+        Vector3 pos = transform.position + transform.rotation * new Vector3(0.0f, 1.0f, 1.0f);
+        Quaternion rot = transform.rotation * Quaternion.Euler(-90, 0, 0);
+        GameObject obj = Instantiate(waterAttackParticle, pos, rot);
+
+        float duration = obj.GetComponent<ParticleSystem>().main.duration;
+        Destroy(obj, duration);
     }
 
     void OnTriggerEnter(Collider other)

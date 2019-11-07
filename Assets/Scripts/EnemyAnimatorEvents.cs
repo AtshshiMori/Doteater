@@ -18,12 +18,6 @@ public class EnemyAnimatorEvents : MonoBehaviour
         gateManager = GameObject.Find("GateManager").GetComponent<GateManager>();
     }
 
-    // 攻撃終了時に呼ばれる処理
-    void AttackEndEvent()
-    {
-        handCollider.enabled = false;
-    }
-
     // ダメージアニメーションの終了時に呼ばれる処理
     void DamagedEndEvent()
     {

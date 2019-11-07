@@ -28,23 +28,27 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
+        // Jabのコライダーを更新
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Attack")) handCollider.enabled = false;
+
+        // NabMeshの設定
         agent.destination = target.transform.position;
         animator.SetFloat("Speed", agent.velocity.sqrMagnitude);
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") ||
+           animator.GetCurrentAnimatorStateInfo(0).IsName("Damaged") ||
+           animator.GetCurrentAnimatorStateInfo(0).IsName("Death"))
+        {
+            agent.velocity = Vector3.zero;
+        }
 
         // 一定距離まで近づいたら攻撃
         if (Vector3.Distance(target.transform.position, transform.position) < attackDistance)
         {
-            animator.SetBool("Attack", true);
+            animator.SetTrigger("Attack");
             handCollider.enabled = true;
         }
-        // if (Input.GetKey(KeyCode.Space))
-        // {
-        //     animator.SetBool("Death", true);
-        // }
-        // else if (Input.GetKeyDown(KeyCode.H))
-        // {
-        //     animator.SetTrigger("Damage");
-        // }
+
     }
     public void Damaged(float attackPoint)
     {
